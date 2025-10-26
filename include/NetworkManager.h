@@ -2,7 +2,7 @@
 #define DEVIL_HORNS_NETWORKMANAGER_H
 
 #include "Arduino.h"
- #include "LedManager.h"
+#include "LedManager.h"
 // #include <PubSubClient.h>
 #include <WiFi.h>
 
@@ -16,7 +16,7 @@ public:
     void onLEDStateChanged(int index, bool state);
 
 private:
-     LEDManager &LED;
+    LEDManager &LED;
     WiFiClient wifiClient;
     // PubSubClient mqttClient{wifiClient};
 
