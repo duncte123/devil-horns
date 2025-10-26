@@ -20,5 +20,7 @@ void loop() {
 //    LED.set(LED_HORN, false, false);
 //    delay(500);
 
+    Network.loop();
     webserver.handleRequest();
+    LED.handleFlash();
 }

@@ -8,6 +8,14 @@
 #define LED_INTERNAL 2
 #define LED_HORN 5
 
+struct BlinkState {
+    unsigned long previousMillis;
+    int onTime;
+    int offTime;
+    int blinkCount;
+    int targetCount;
+};
+
 class LEDManager {
 public:
     LEDManager();
@@ -17,11 +25,15 @@ public:
     bool get(int pin);
 
     void setOnLEDStateChanged(std::function<void(int, bool)> callback);
+    void handleFlash();
 
 private:
     int leds[2] = {LED_INTERNAL, LED_HORN};
     std::unordered_map<int, bool> ledStates /*= {(LED_INTERNAL, false), (LED_HORN, false)}*/;
+    std::unordered_map<int, BlinkState> blinkStates;
     std::function<void(int, bool)> onLEDStateChanged = nullptr;
+
+    void setInternally(int pin, bool state);
 };
 
 

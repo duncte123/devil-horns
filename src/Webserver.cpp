@@ -60,10 +60,13 @@ void Webserver::handleRequest() {
                     String commandStr(command);
 
                     if (commandStr.equals("/lights/off")) {
-                        LED.set(LED_HORN, false, false);
+                        LED.set(LED_HORN, LOW, false);
                         signalSuccess(client);
                     } else if (commandStr.equals("/lights/on")) {
-                        LED.set(LED_HORN, true, false);
+                        LED.set(LED_HORN, HIGH, false);
+                        signalSuccess(client);
+                    } else if (commandStr.equals("/lights/blink")) {
+                        LED.flash(LED_HORN, 10000000, 100, 100);
                         signalSuccess(client);
                     } else {
                         client.println("HTTP/1.1 404 Not Found");
