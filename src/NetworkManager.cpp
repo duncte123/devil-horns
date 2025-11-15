@@ -42,6 +42,7 @@ void NetworkManager::connectMQTT() {
         if (mqttClient.connect("devil-horns")) {
             Serial.println("MQTT connected!");
             mqttClient.subscribe("hackalot/demo"); // Subscribe to each LED topic
+            mqttClient.subscribe("duncte/demo"); // Subscribe to each LED topic
             LED.flash(LED_INTERNAL, 2, 100, 100); // Success flash for LED 1
         } else {
             Serial.printf("MQTT connection failed, rc=%d. Retrying in 2s...\n",
@@ -75,7 +76,8 @@ void NetworkManager::messageReceived(char *topic, byte *payload,
     String topicStr(topic);
     int ledIndex = topicStr.substring(topicStr.lastIndexOf("/") + 1).toInt();
 
-    if (topicStr == "hackalot/demo") {
+    if (topicStr == "hackalot/demo" || topicStr == "duncte/demo") {
+        Serial.printf("Got %s\n", topic);
         LED.flash(LED_HORN, 5, 1000, 1000);
     }
 
