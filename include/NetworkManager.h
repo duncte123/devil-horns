@@ -3,12 +3,12 @@
 
 #include "Arduino.h"
 #include "LedManager.h"
-// #include <PubSubClient.h>
+#include <PubSubClient.h>
 #include <WiFi.h>
 
 class NetworkManager {
 public:
-    NetworkManager(LEDManager &ledRef);
+    explicit NetworkManager(LEDManager &ledRef);
     void connectWiFi();
     void connectMQTT();
     void loop();
@@ -18,7 +18,7 @@ public:
 private:
     LEDManager &LED;
     WiFiClient wifiClient;
-    // PubSubClient mqttClient{wifiClient};
+    PubSubClient mqttClient{wifiClient};
 
     const char *ssid = "hackalot";
     const char *password = "zegikniet";

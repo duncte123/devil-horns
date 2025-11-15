@@ -31,7 +31,7 @@ void NetworkManager::connectWiFi() {
 }
 
 void NetworkManager::connectMQTT() {
-    /*while (!mqttClient.connected()) {
+    while (!mqttClient.connected()) {
         Serial.printf("Connecting to MQTT broker at %s...\n", mqttServer);
         mqttClient.setServer(mqttServer, mqttPort);
         mqttClient.setCallback(
@@ -39,21 +39,17 @@ void NetworkManager::connectMQTT() {
                     this->messageReceived(topic, payload, length);
                 });
 
-        if (mqttClient.connect("space-closing-checklist")) {
+        if (mqttClient.connect("devil-horns")) {
             Serial.println("MQTT connected!");
-            for (int i = 0; i < 7; i++) {
-                char topic[50];
-                sprintf(topic, "hackalot/closing-checklist/%d", i);
-                mqttClient.subscribe(topic); // Subscribe to each LED topic
-            }
-            LED.flash(1, 2, 100, 100); // Success flash for LED 1
+            mqttClient.subscribe("hackalot/demo"); // Subscribe to each LED topic
+            LED.flash(LED_INTERNAL, 2, 100, 100); // Success flash for LED 1
         } else {
             Serial.printf("MQTT connection failed, rc=%d. Retrying in 2s...\n",
                           mqttClient.state());
-            LED.flash(1, 1, 200, 200); // Flash on failure for LED 1
+            LED.flash(LED_INTERNAL, 1, 200, 200); // Flash on failure for LED 1
             delay(2000);
         }
-    }*/
+    }
 }
 
 void NetworkManager::loop() {
@@ -64,20 +60,24 @@ void NetworkManager::loop() {
         return;
     }
 
-    /*if (!mqttClient.connected()) {
-        LED.flash(1, 1, 200, 200); // Flash LED 1 one time
+    if (!mqttClient.connected()) {
+        LED.flash(LED_INTERNAL, 1, 200, 200); // Flash LED 1 one time
         Serial.println("MQTT disconnected...");
         connectMQTT();
         return;
     }
 
-    mqttClient.loop();*/
+    mqttClient.loop();
 }
 
 void NetworkManager::messageReceived(char *topic, byte *payload,
                                      unsigned int length) {
     String topicStr(topic);
     int ledIndex = topicStr.substring(topicStr.lastIndexOf("/") + 1).toInt();
+
+    if (topicStr == "hackalot/demo") {
+        LED.flash(LED_HORN, 5, 1000, 1000);
+    }
 
     if (ledIndex >= 0 && ledIndex < 7) {
         LED.set(ledIndex, payload[0] == '1', false); // Update LED state

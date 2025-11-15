@@ -11,7 +11,8 @@ void setup() {
     Serial.begin(115200);
     LED.begin();
     Network.connectWiFi();
-    webserver.begin();
+    Network.connectMQTT();
+//    webserver.begin();
 }
 
 void loop() {
@@ -21,6 +22,6 @@ void loop() {
 //    delay(500);
 
     Network.loop();
-    webserver.handleRequest();
+//    webserver.handleRequest();
     LED.handleFlash();
 }
