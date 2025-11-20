@@ -5,6 +5,7 @@
 #include "LedManager.h"
 #include <PubSubClient.h>
 #include <WiFi.h>
+#include "secrets.h"
 
 class NetworkManager {
 public:
@@ -20,9 +21,9 @@ private:
     WiFiClient wifiClient;
     PubSubClient mqttClient{wifiClient};
 
-    const char *ssid = "hackalot";
-    const char *password = "zegikniet";
-    const char *mqttServer = "mqtt.space.hackalot.nl";
+    const char *ssid = WIFI_SSID;
+    const char *password = WIFI_PASS;
+    const char *mqttServer = MQTT_SERVER;
     const int mqttPort = 1883;
 };
 
