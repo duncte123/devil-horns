@@ -43,6 +43,7 @@ void NetworkManager::connectMQTT() {
             Serial.println("MQTT connected!");
             mqttClient.subscribe("hackalot/demo"); // Subscribe to each LED topic
             mqttClient.subscribe("duncte/demo"); // Subscribe to each LED topic
+            mqttClient.subscribe("devil-horns/state"); // Subscribe to each LED topic
             LED.flash(LED_INTERNAL, 2, 100, 100); // Success flash for LED 1
         } else {
             Serial.printf("MQTT connection failed, rc=%d. Retrying in 2s...\n",
@@ -74,16 +75,18 @@ void NetworkManager::loop() {
 void NetworkManager::messageReceived(char *topic, byte *payload,
                                      unsigned int length) {
     String topicStr(topic);
-    int ledIndex = topicStr.substring(topicStr.lastIndexOf("/") + 1).toInt();
+//    int ledIndex = topicStr.substring(topicStr.lastIndexOf("/") + 1).toInt();
+    Serial.printf("Got %s\n", topic);
 
     if (topicStr == "hackalot/demo" || topicStr == "duncte/demo") {
-        Serial.printf("Got %s\n", topic);
         LED.flash(LED_HORN, 5, 1000, 1000);
+    } else if (topicStr == "devil-horns/state") {
+        LED.set(LED_HORN, payload[0] == '1', false);
     }
 
-    if (ledIndex >= 0 && ledIndex < 7) {
-        LED.set(ledIndex, payload[0] == '1', false); // Update LED state
-    }
+//    if (ledIndex >= 0 && ledIndex < 7) {
+//        LED.set(ledIndex, payload[0] == '1', false); // Update LED state
+//    }
 }
 
 void NetworkManager::onLEDStateChanged(int index, bool state) {
